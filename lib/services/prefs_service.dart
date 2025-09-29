@@ -10,28 +10,33 @@ final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async 
 /// State model for preferences
 class PrefsState {
   final int highScore;
+  final String highScoreName;
   final ThemeMode themeMode;
   final bool musicOn;
 
   const PrefsState({
     required this.highScore,
+    required this.highScoreName,
     required this.themeMode,
     required this.musicOn,
   });
 
   factory PrefsState.initial() => const PrefsState(
         highScore: 0,
+        highScoreName: "",
         themeMode: ThemeMode.system,
         musicOn: true,
       );
 
   PrefsState copyWith({
     int? highScore,
+    String? highScoreName,
     ThemeMode? themeMode,
     bool? musicOn,
   }) {
     return PrefsState(
       highScore: highScore ?? this.highScore,
+      highScoreName: highScoreName ?? this.highScoreName,
       themeMode: themeMode ?? this.themeMode,
       musicOn: musicOn ?? this.musicOn,
     );
@@ -48,21 +53,24 @@ class PrefsNotifier extends StateNotifier<PrefsState> {
 
   void _loadPrefs() {
     final highScore = _prefs.getInt('highScore') ?? 0;
+    final highScoreName = _prefs.getString('highScoreName') ?? "";
     final themeIndex = _prefs.getInt('themeMode') ?? ThemeMode.system.index;
     final themeMode = ThemeMode.values[themeIndex];
     final musicOn = _prefs.getBool('musicOn') ?? true;
 
     state = state.copyWith(
       highScore: highScore,
+      highScoreName: highScoreName,
       themeMode: themeMode,
       musicOn: musicOn,
     );
   }
 
-  // Save High Score
-  void setHighScore(int value) {
-    state = state.copyWith(highScore: value);
+  // Save High Score with Name
+  void setHighScore(int value, String name) {
+    state = state.copyWith(highScore: value, highScoreName: name);
     _prefs.setInt('highScore', value);
+    _prefs.setString('highScoreName', name);
   }
 
   // Save Theme Mode

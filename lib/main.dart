@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:ring_react_game/services/prefs_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +8,18 @@ import 'screens/game_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await MobileAds.instance.initialize();
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ),
+  );
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
